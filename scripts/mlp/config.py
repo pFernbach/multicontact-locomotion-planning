@@ -14,13 +14,13 @@ centroidal_method = "timeopt"#"load"#
 wholebody_method = "tsid" 
 end_effector_method = "limbRRToptimized" 
 
-## PATHS settings : 
-PKG_PATH = "/local/dev_hpp/src/multicontact-locomotion-planning"
-OUTPUT_DIR = PKG_PATH+"/res"
-CONTACT_SEQUENCE_PATH = OUTPUT_DIR + "/contact_sequences"
+## PATHS settings :
+PKG_PATH = os.environ['DEVEL_HPP_DIR']+"/src/multicontact-locomotion-planning"
+OUTPUT_DIR = "/res"
+CONTACT_SEQUENCE_PATH = OUTPUT_DIR
 TIME_OPT_CONFIG_PATH = PKG_PATH +'/timeOpt_configs'
 STATUS_FILENAME = OUTPUT_DIR + "/infos.log"
-EXPORT_PATH = OUTPUT_DIR+"/export"
+EXPORT_PATH = OUTPUT_DIR
 ## Export setting
 SAVE_CS = True 
 SAVE_CS_COM = True
