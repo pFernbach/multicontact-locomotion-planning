@@ -69,7 +69,7 @@ EFF_CHECK_COLLISION = True # After generating of whole body motion for a phase w
 CHECK_DT = 0.02 # time step (in seconds) at which the (self-)collision and joints limits are tested
 WB_ABORT_WHEN_INVALID = True # stop wb script when stuck with an invalid motion and return the VALID part (before the phase with collision)
 WB_RETURN_INVALID = not WB_ABORT_WHEN_INVALID and False  # stop wb script when stuck with an invalid motion and return  the computed part of motion, incuding the last INVALID phase
-
+THROW_WHEN_WB_FAIL = True
 ##  Settings for whole body : 
 YAW_ROT_GAIN = 1. # gain for the orientation task of the root orientation, along the yaw axis (wrt to the other axis of the orientation task)
 USE_PLANNING_ROOT_ORIENTATION = True # if true, the reference for the root orientation is the one given by the planning (stored in phase.reference_configurations) if false, use the one of q_init for all the motion.

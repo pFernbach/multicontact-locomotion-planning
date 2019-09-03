@@ -69,7 +69,10 @@ if cfg.WRITE_STATUS:
     if res.N == (int(round(cs_com.contact_phases[-1].time_trajectory[-1]/cfg.IK_dt)) + 1):
         f.write("wholebody_reach_goal: True\n")
     else : 
-        f.write("wholebody_reach_goal: False\n")   
+        f.write("wholebody_reach_goal: False\n")
+        if cfg.THROW_WHEN_WB_FAIL:
+            import sys
+            sys.exit(1)
     f.close()
 
 
