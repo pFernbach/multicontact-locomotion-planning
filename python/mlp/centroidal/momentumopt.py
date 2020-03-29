@@ -347,7 +347,8 @@ def generate_centroidal_momentumopt(cfg, cs, cs_initGuess=None, fullBody=None, v
     # load planner settings from yaml:
     planner_setting = PlannerSetting()
     cfg_path = cfg.TIME_OPT_CONFIG_PATH + '/' + cfg.TIMEOPT_CONFIG_FILE
-    print("Use configuration file for momentumopt : ", cfg_path)
+    if VERBOSE:
+        print("Use configuration file for momentumopt : ", cfg_path)
     planner_setting.initialize(cfg_path)
     planner_setting.set(mopt.PlannerIntParam_NumActiveEndeffectors, len(cs.getAllEffectorsInContact()))
     setDuration(planner_setting, cs, cfg.SOLVER_DT)
@@ -371,7 +372,8 @@ def generate_centroidal_momentumopt(cfg, cs, cs_initGuess=None, fullBody=None, v
     if VERBOSE:
         print("Start optimization ...")
     code = dyn_opt.optimize(ini_state, contact_plan, kin_sequence, not first_iter)
-    print("Momentumopt internal solving time: " + str(dyn_opt.solveTime() / 1000.) + " s")
+    if VERBOSE:
+        print("Momentumopt internal solving time: " + str(dyn_opt.solveTime() / 1000.) + " s")
     if code != ExitCode.Optimal:
         print("!! WARNING: momentumopt exit with a non Optimal status: ", code)
 
