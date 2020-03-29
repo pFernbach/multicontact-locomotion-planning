@@ -187,7 +187,7 @@ def adjustEndEffectorTrajectoryIfNeeded(cfg, phase, robot, data, eeName, effecto
         phase.addEffectorTrajectory(eeName, ref_traj)
 
 
-def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
+def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None, robot=None):
     """
     Generate the whole body motion corresponding to the given contactSequence
     :param cs: Contact sequence containing the references,
@@ -379,12 +379,16 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
     deleteAllTrajectories(cs)
 
     # Create a robot wrapper
-    rp = RosPack()
-    package_path = rp.get_path(cfg.Robot.packageName)
-    urdf = package_path + '/urdf/' + cfg.Robot.urdfName + cfg.Robot.urdfSuffix + '.urdf'
-    if cfg.WB_VERBOSE:
-        print("load robot : ", urdf)
-    robot = tsid.RobotWrapper(urdf, pin.StdVec_StdString(), pin.JointModelFreeFlyer(), False)
+    if robot is None or cfg.IK_store_centroidal or cfg.IK_store_zmp:
+        rp = RosPack()
+        package_path = rp.get_path(cfg.Robot.packageName)
+        urdf = package_path + '/urdf/' + cfg.Robot.urdfName + cfg.Robot.urdfSuffix + '.urdf'
+    if robot is None:
+        if cfg.WB_VERBOSE:
+            print("load robot : ", urdf)
+        robot = tsid.RobotWrapper(urdf, pin.StdVec_StdString(), pin.JointModelFreeFlyer(), False)
+    elif cfg.WB_VERBOSE:
+        print("Use given robot in tsid.")
     if cfg.WB_VERBOSE:
         print("robot loaded in tsid.")
     if cfg.IK_store_centroidal or cfg.IK_store_zmp:
@@ -716,4 +720,4 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
         print("\nFinal COM Position  ", robot.com(invdyn.data()))
         print("Desired COM Position", cs.contactPhases[-1].c_final)
 
-    return cs
+    return cs, robot
