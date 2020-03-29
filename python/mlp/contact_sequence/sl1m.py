@@ -120,8 +120,9 @@ def quatToConfig(quat):
 # FIXME : HARDCODED stuff for talos in this method !
 def gen_pb(root_init, R, surfaces, ref_root_height):
     #print "surfaces = ",surfaces
-    print("number of surfaces : ", len(surfaces))
-    print("number of rotation matrix for root : ", len(R))
+    if VERBOSE:
+        print("number of surfaces : ", len(surfaces))
+        print("number of rotation matrix for root : ", len(R))
     nphases = len(surfaces)
     lf_0 = array(root_init[0:3]) + array([0, 0.085, -ref_root_height])  # values for talos !
     rf_0 = array(root_init[0:3]) + array([0, -0.085, -ref_root_height])  # values for talos !
@@ -130,7 +131,8 @@ def gen_pb(root_init, R, surfaces, ref_root_height):
     #lf_0[2] = init_floor_height
     #rf_0[2] = init_floor_height
     p0 = [lf_0, rf_0]
-    print("p0 used : ", p0)
+    if VERBOSE:
+        print("p0 used : ", p0)
     res = {"p0": p0, "c0": None, "nphases": nphases}
     #print "number of rotations values : ",len(R)
     #print "R= ",R
@@ -245,7 +247,8 @@ def generate_contact_sequence_sl1m(cfg):
     q_init = cfg.IK_REFERENCE_CONFIG.tolist() + [0] * 6
     q_init[0:7] = root_init
     feet_height_init = allfeetpos[0][2]
-    print("feet height initial = ", feet_height_init)
+    if VERBOSE:
+        print("feet height initial = ", feet_height_init)
     q_init[2] = feet_height_init + cfg.IK_REFERENCE_CONFIG[2]
     q_init[2] += EPS_Z
     #q_init[2] = fb.referenceConfig[2] # 0.98 is in the _path script
@@ -304,7 +307,8 @@ def generate_contact_sequence_sl1m(cfg):
     #    q_end[i] += p_end[i]
     q_end[0:7] = root_end
     feet_height_end = allfeetpos[-1][2]
-    print("feet height final = ", feet_height_end)
+    if VERBOSE:
+        print("feet height final = ", feet_height_end)
     q_end[2] = feet_height_end + cfg.IK_REFERENCE_CONFIG[2]
     q_end[2] += EPS_Z
     fb.setCurrentConfig(q_end)
