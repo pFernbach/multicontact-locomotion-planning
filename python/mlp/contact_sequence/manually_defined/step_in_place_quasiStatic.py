@@ -10,6 +10,8 @@ from talos_rbprm.talos import Robot  # change robot here
 multicontact_api.switchToNumpyArray()
 
 ENV_NAME = "multicontact/ground"
+DS_DURATION = 8.
+SS_DURATION = 6.
 
 # Build the robot object and the viewer
 fb, v = display_tools.initScene(Robot, ENV_NAME, False)
@@ -70,9 +72,9 @@ for pid, phase in enumerate(cs.contactPhases):
     # define timing :
     phase.timeInitial = t
     if phase.numContacts() == 2:
-        phase.timeFinal = t + 2. # DS duration
+        phase.timeFinal = t + DS_DURATION # DS duration
     else:
-        phase.timeFinal = t + 1.5 ## SS duration
+        phase.timeFinal = t + SS_DURATION ## SS duration
     t = phase.timeFinal
     # define init/end CoM position :
     if phase.numContacts() == 1:
