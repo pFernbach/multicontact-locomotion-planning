@@ -6,8 +6,8 @@ ENV_NAME = "multicontact/plateforme_surfaces"
 kp_Eff = 500.  # proportional gain of the effectors motion task
 
 
-DURATION_INIT = 2.  # Time to init the motion
-DURATION_SS = 1.6
+DURATION_INIT = 3.  # Time to init the motion
+DURATION_SS = 2.
 DURATION_DS = 0.3
 DURATION_TS = 0.4
 DURATION_CONNECT_GOAL = 0.
