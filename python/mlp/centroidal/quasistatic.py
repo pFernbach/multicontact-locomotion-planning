@@ -58,6 +58,24 @@ def getTargetCOMPosition(fullBody, id_state, com_shift_z):
     logger.info("c : %s", c)
     return c
 
+def setRobustnessOffset(fullBody, c, limbs_in_contact, offset):
+    if offset <= 0.:
+        logger.debug("robustness offset null, return c")
+        return c
+    if len(limbs_in_contact) > 1:
+        logger.info("In setRobustnessOffset swing phase have more than on contact, not implemented yet. Return c.")
+        return c
+    limb = limbs_in_contact[0]
+    # FIXME : apply transform depending on feet orientation
+    if limb == fullBody.rfoot:
+        c[1] += offset
+    elif limb == fullBody.lfoot:
+        c[1] -= offset
+    else:
+        logger.warning("In setRobustnessOffset, limn is neither right or left foot : %s", limb)
+    logger.debug("c after robustness offset : %s", c)
+    return c
+
 
 
 def generate_centroidal_quasistatic(cfg, cs, cs_initGuess=None, fullBody=None, viewer=None, first_iter = True):
@@ -82,11 +100,14 @@ def generate_centroidal_quasistatic(cfg, cs, cs_initGuess=None, fullBody=None, v
         # set initial state to be the final one of the previous phase :
         if id_phase > 1:
             setInitialFromFinalValues(phase_swing, phase_fixed)
+        if id_state < endId:
+            phase_swing = cs_result.contactPhases[id_phase + 1]  # phase where the CoM is fixed and an effector move
         # compute 'optimal' position of the COM to go before switching phase:
         if id_state == endId:
             c = phase_fixed.c_final
         else:
             c = getTargetCOMPosition(fullBody, id_state, cfg.COM_SHIFT_Z)
+            c = setRobustnessOffset(fullBody, c, phase_swing.effectorsInContact(), cfg.QUASISTATIC_ROBUSTNESS)
             # set 'c' the final position of current phase :
             phase_fixed.c_final = c
         phase_fixed.dc_final = np.zeros(3)
@@ -95,7 +116,6 @@ def generate_centroidal_quasistatic(cfg, cs, cs_initGuess=None, fullBody=None, v
 
         id_phase += 1
         if id_state < endId:
-            phase_swing = cs_result.contactPhases[id_phase]  # phase where the CoM is fixed and an effector move
             # in swing phase, com do not move :
             setInitialFromFinalValues(phase_fixed,phase_swing)
             copyPhaseInitToFinal(phase_swing)
