@@ -26,12 +26,13 @@ level_am = 1
 DURATION_INIT = 2.  # Time to init the motion
 DURATION_FINAL = 2.  # Time to stop the robot
 DURATION_FINAL_SS = 1.
-DURATION_SS = 1.6
-DURATION_DS = 2.
+DURATION_SS = 2.
+DURATION_DS = 3.
 DURATION_TS = 0.4
 DURATION_CONNECT_GOAL = 2.
+QUASISTATIC_ROBUSTNESS = 0.03
 
 COM_SHIFT_Z = -0.07
 
-EFF_T_PREDEF = 0.35
-p_max = 0.13
+EFF_T_PREDEF = 0.3
+p_max = 0.14
