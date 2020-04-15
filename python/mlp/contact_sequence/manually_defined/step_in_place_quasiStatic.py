@@ -10,8 +10,9 @@ from talos_rbprm.talos import Robot  # change robot here
 multicontact_api.switchToNumpyArray()
 
 ENV_NAME = "multicontact/ground"
-DS_DURATION = 8.
-SS_DURATION = 6.
+DS_DURATION = 3.
+SS_DURATION = 1.6
+ROB_OFFSET = 0.02
 
 # Build the robot object and the viewer
 fb, v = display_tools.initScene(Robot, ENV_NAME, False)
@@ -39,8 +40,10 @@ phase = cs.contactPhases[0]
 c_mid = array(fb.getCenterOfMass())
 c_r =  phase.contactPatch('leg_right_sole_fix_joint').placement.translation
 c_r[2] = c_mid[2] - 0.02
+c_r[1] += ROB_OFFSET
 c_l =  phase.contactPatch('leg_left_sole_fix_joint').placement.translation
 c_l[2] = c_mid[2] - 0.02
+c_l[1] -= ROB_OFFSET
 
 transform = SE3.Identity()
 cs.moveEffectorOf(fb.rfoot, transform)
