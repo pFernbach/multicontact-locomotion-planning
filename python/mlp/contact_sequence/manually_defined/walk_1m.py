@@ -16,10 +16,55 @@ sceneName = v.sceneName
 cs = ContactSequence(0)
 
 #Create an initial contact phase :
-q_ref = fb.referenceConfig[::] + [0] * 6
+#q_ref = fb.referenceConfig[::] + [0] * 6
+q_ref = [       0.0,
+                0.0,
+                1.02127,
+                0.0,
+                0.0,
+                0.0,
+                1.,  # Free flyer
+                0.0,
+                0.0,
+                -0.411354,
+                0.859395,
+                -0.448041,
+                -0.001708,  # Left Leg
+                0.0,
+                0.0,
+                -0.411354,
+                0.859395,
+                -0.448041,
+                -0.001708,  # Right Leg
+                0.0,
+                0.006761,  # Chest
+                0.40,
+                0.24,
+                -0.6,
+                -1.45,
+                0.0,
+                -0.0,
+                0.,
+                -0.005,  # Left Arm
+                -0.4,
+                -0.24,
+                0.6,
+                -1.45,
+                0.0,
+                0.0,
+                0.,
+                -0.005,  # Right Arm
+                0.,
+                0.,
+                0.,
+                0.,
+                0.,
+                0.,
+                0.,
+                0.]
 addPhaseFromConfig(fb, cs, q_ref, [fb.rLegId, fb.lLegId])
 
-walk(fb, cs, 1., 0.2, [fb.rLegId, fb.lLegId])
+walk(fb, cs, 0.6, 0.2, [fb.rLegId, fb.lLegId])
 
 display_tools.displaySteppingStones(cs, gui, sceneName, fb)
 
