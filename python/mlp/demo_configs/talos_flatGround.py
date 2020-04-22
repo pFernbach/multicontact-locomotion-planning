@@ -3,14 +3,14 @@ from .common_talos import *
 SCRIPT_PATH = "demos"
 ENV_NAME = "multicontact/ground"
 
-DURATION_SS = 1.6
-DURATION_DS = 0.3
+DURATION_SS = 0.8
+DURATION_DS = 0.2
 
-EFF_T_PREDEF = 0.2
+EFF_T_PREDEF = 0.15
 EFF_T_DELAY = 0.05
 FEET_MAX_VEL = 1.
 FEET_MAX_ANG_VEL = 1.5
-p_max = 0.07
+p_max = 0.05
 USE_PLANNING_ROOT_ORIENTATION = False
 
 IK_REFERENCE_CONFIG = np.array(
