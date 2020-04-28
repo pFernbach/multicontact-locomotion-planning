@@ -1,19 +1,20 @@
 TIMEOPT_CONFIG_FILE = "cfg_softConstraints_timeopt_talos.yaml"
 from .common_talos import *
+Robot.urdfSuffix += "_safeFeet"
 SCRIPT_PATH = "demos"
-ENV_NAME = "multicontact/plateforme_surfaces"
+ENV_NAME = "multicontact/plateforme_surfaces_noscale"
 
-kp_Eff = 500.  # proportional gain of the effectors motion task
-
+kp_Eff = 2000.  # proportional gain of the effectors motion task
+DEMO_NAME = "talos_platformes_full"
 
 #DURATION_INIT = 3.  # Time to init the motion
-DURATION_SS = 1.8
-DURATION_DS = 0.3
+DURATION_SS = 1.6
+DURATION_DS = 0.5
 DURATION_TS = 0.4
 DURATION_CONNECT_GOAL = 0.
 
 EFF_T_PREDEF = 0.2
-p_max = 0.12
+p_max = 0.13
 
 IK_REFERENCE_CONFIG = np.array(
 [       0.0,
