@@ -50,10 +50,12 @@ def computeCenterOfSupportPolygonFromState(s):
 
 def computeCenterOfSupportPolygonFromPhase(phase, DEFAULT_HEIGHT):
     com = np.zeros(3)
+    z_max = -100
     for patch in phase.contactPatches().values():
         com += patch.placement.translation
+        z_max = max(z_max, patch.placement.translation[2])
     com /= phase.numContacts()
-    com[2] += DEFAULT_HEIGHT
+    com[2] = z_max + DEFAULT_HEIGHT
     return com
 
 
