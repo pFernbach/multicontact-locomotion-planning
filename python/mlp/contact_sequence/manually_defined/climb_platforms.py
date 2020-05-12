@@ -16,7 +16,7 @@ sceneName = v.sceneName
 cs = ContactSequence(0)
 
 cs_platforms = ContactSequence(0)
-cs_platforms.loadFromBinary("talos_plateformes.cs")
+cs_platforms.loadFromBinary("talos_platformes.cs")
 p0_platform = cs_platforms.contactPhases[0]
 
 q = [   0.0,

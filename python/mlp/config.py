@@ -20,7 +20,7 @@ class Config:
 
     def __init__(self):
         ## methods setting : choose which method will be used to solve each subproblem :
-        self.contact_generation_method = "rbprm"
+        self.contact_generation_method = "load"
         self.centroidal_initGuess_method = "none"
         self.centroidal_method = "momentumopt"
         self.end_effector_initGuess_method = "bezier_predef"
@@ -89,7 +89,7 @@ class Config:
         # if False, it interpolate the orientation and adapt it depending if the feet is in the inside or outside of the turn
         self.SL1M_USE_INTERPOLATED_ORIENTATION = True
 
-        self.ITER_DYNAMIC_FILTER = 0  # if > 0 the solution of the wholebody method is send back to the centroidal solver
+        self.ITER_DYNAMIC_FILTER = 2  # if > 0 the solution of the wholebody method is send back to the centroidal solver
 
         ### Settings for centroidal script :
         self.GRAVITY = np.array([0, 0, -9.81])

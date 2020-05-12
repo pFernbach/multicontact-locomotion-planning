@@ -8,7 +8,7 @@ kp_Eff = 2000.  # proportional gain of the effectors motion task
 DEMO_NAME = "talos_platformes_full"
 
 #DURATION_INIT = 3.  # Time to init the motion
-DURATION_SS = 1.6
+DURATION_SS = 1.8
 DURATION_DS = 0.5
 DURATION_TS = 0.4
 DURATION_CONNECT_GOAL = 0.
