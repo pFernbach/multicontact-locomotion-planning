@@ -1,5 +1,5 @@
 import multicontact_api
-from multicontact_api import ContactSequence, ContactPhase, ContactPatch, ContactModel, ContactType
+from multicontact_api import ContactSequence, ContactPhase, ContactPatch
 from curves import piecewise, polynomial, SE3Curve
 from pinocchio import SE3, Quaternion
 from mlp.utils.util import SE3FromConfig,  computeContactNormal, rootOrientationFromFeetPlacement
