@@ -141,12 +141,14 @@ def setFinalState(cs, com=None, q=None):
 # generate a walking motion from the last phase in the contact sequence.
 # the contacts will be moved in the order of the 'gait' list. With the first one move only of half the stepLength
 # TODO : make it generic ! it's currently limited to motion in the x direction
-def walk(fb, cs, distance, stepLength, gait, duration_ss = -1 , duration_ds = -1):
+def walk(fb, cs, distance, stepLength, gait, offset_y = None, duration_ss = -1 , duration_ds = -1):
     fb.usePosturalTaskContactCreation(True)
     prev_phase = cs.contactPhases[-1]
     for limb in gait:
         eeName = fb.dict_limb_joint[limb]
         assert prev_phase.isEffectorInContact(eeName), "All limbs in gait should be in contact in the first phase"
+    if offset_y is None:
+        offset_y = [0] * len(gait)
     isFirst = True
     reached = False
     firstContactReachedGoal = False
@@ -169,9 +171,10 @@ def walk(fb, cs, distance, stepLength, gait, duration_ss = -1 , duration_ds = -1
                     length = remainingDistance
             transform = SE3.Identity()
             #print("length = ",length)
-            transform.translation = np.array([length, 0, 0])
+            transform.translation = np.array([length, offset_y[k], 0])
             cs.moveEffectorOf(eeName, transform, duration_ds, duration_ss)
         remainingDistance -= stepLength
+        offset_y = [0] * len(gait)
     if not firstContactReachedGoal:
         transform = SE3.Identity()
         #print("last length = ", stepLength)
