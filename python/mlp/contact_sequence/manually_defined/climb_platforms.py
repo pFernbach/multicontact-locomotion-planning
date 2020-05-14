@@ -16,7 +16,7 @@ sceneName = v.sceneName
 cs = ContactSequence(0)
 
 cs_platforms = ContactSequence(0)
-cs_platforms.loadFromBinary("talos_platformes.cs")
+cs_platforms.loadFromBinary("talos_plateformes_legs_appart.cs")
 p0_platform = cs_platforms.contactPhases[0]
 
 q = [   0.0,
@@ -60,10 +60,49 @@ q = [   0.0,
         0.
     ] + [0]*6
 
+q_legs = [  0.0,
+        0.0,
+        1.02127,
+        0.0,
+        0.0,
+        0.0,
+        1.,  # Free flyer
+        0.0,
+        0.06,
+        -0.411354,
+        0.859395,
+        -0.448041,
+        -0.061708,  # Left Leg
+        0.0,
+        -0.06,
+        -0.411354,
+        0.859395,
+        -0.448041,
+        0.058292,  # Right Leg
+        0.0,
+        0.006761,  # Chest
+        0.25847,
+        0.173046,
+        -0.0002,
+        -0.525366,
+        0.0,
+        -0.0,
+        0.1,
+        -0.005,  # Left Arm
+        -0.25847,
+        -0.173046,
+        0.0002,
+        -0.525366,
+        0.0,
+        0.0,
+        0.1,
+        -0.005,  # Right Arm
+        0.,
+        0. ] + [0]*6
 q[:2] = [-0.15, 0.25]
 addPhaseFromConfig(fb, cs, q, [fb.rLegId, fb.lLegId])
-q[:3] = [0.11, 0.25, 1.18127]
-p_up = createPhaseFromConfig(fb, q, [fb.rLegId, fb.lLegId])
+q_legs[:3] = [0.11, 0.25, 1.18127]
+p_up = createPhaseFromConfig(fb, q_legs, [fb.rLegId, fb.lLegId])
 
 #make the first step to the platform
 cs.moveEffectorToPlacement(fb.rfoot,p_up.contactPatch(fb.rfoot).placement)
@@ -79,10 +118,10 @@ for phase in cs_platforms.contactPhases[1:]:
 
 
 ## Add final step :
-q[0] = 1.14
-p_end = createPhaseFromConfig(fb, q, [fb.rLegId, fb.lLegId])
-q[:3] = [1.37, 0.25, 1.02127]
-p_floor = createPhaseFromConfig(fb, q, [fb.rLegId, fb.lLegId])
+q_legs[0] = 1.14
+p_end = createPhaseFromConfig(fb, q_legs, [fb.rLegId, fb.lLegId])
+q_legs[:3] = [1.37, 0.25, 1.02127]
+p_floor = createPhaseFromConfig(fb, q_legs, [fb.rLegId, fb.lLegId])
 
 #make a step to got to the edge of the platform
 cs.moveEffectorToPlacement(fb.rfoot,p_end.contactPatch(fb.rfoot).placement)
