@@ -187,6 +187,7 @@ class Requirements():
 
     @classmethod
     def requireEffectorTrajectories(cls, cs, c_type):
+        return True
         if not cs.haveEffectorsTrajectories(1e-2, c_type == "_6_DOF"):
             print("- Contact sequence do not have consistent effector trajectories.")
             return False
@@ -273,7 +274,7 @@ class Requirements():
             assert cs.haveJointsDerivativesTrajectories(), "Contact sequence do not have consistent joints trajectories."
         if cls.torqueTrajectories:
             assert cs.haveTorquesTrajectories(), "Contact sequence do not have consistent torques trajectories"
-        if cls.effectorTrajectories:
+        if cls.effectorTrajectories and False:
             assert cs.haveEffectorsTrajectories(1e-2, use_effector_rotation), \
                 "Contact sequence do not have consistent effector trajectories."
         if cls.contactForcesTrajectories:
@@ -294,7 +295,7 @@ class Requirements():
             assert cs.haveTorquesTrajectories(), "Contact sequence do not have consistent torques trajectories"
         if cfg.IK_store_centroidal:
             assert cs.haveCentroidalTrajectories (), "Contact sequence do not have consistent centroidal trajectories."
-        if cfg.IK_store_effector:
+        if cfg.IK_store_effector and False:
             assert cs.haveEffectorsTrajectories(1e-2, cfg.Robot.cType == "_6_DOF"), \
                 "Contact sequence do not have consistent effector trajectories."
         if cfg.IK_store_contact_forces:
