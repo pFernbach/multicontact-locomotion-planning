@@ -293,6 +293,38 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
                 phase.contactForce(eeName).append(contact_forces, t)
                 phase.contactNormalForce(eeName).append(contact_normal_force.reshape(1), t)
 
+    def compare_torques():
+        tau_tot = pin.rnea(pinRobot.model, pinRobot.data, q, v, dv)
+
+        contacts_names = ['LF_ADAPTER_TO_FOOT', 'LH_ADAPTER_TO_FOOT', 'RF_ADAPTER_TO_FOOT', 'RH_ADAPTER_TO_FOOT']
+        # compute/stack contact jacobians
+        Jlinvel = np.zeros((12, robot.nv))
+        forces = np.zeros(12)
+        for i, eeName_t in enumerate(contacts_names):
+            frame_id = robot.model().getFrameId(eeName_t)
+            #Jlinvel[3 * i:3 * (i + 1), :] = pinRobot.computeFrameJacobian(q, frame_id)[:3, :]  # jac in local coord
+            oTl = pinRobot.framePlacement(q, frame_id, update_kinematics=False)
+            Jlinvel[3 * i:3 * (i + 1), :] = oTl.rotation @ pinRobot.computeFrameJacobian(q, frame_id)[:3,:]  # jac in world coor
+            if phase.isEffectorInContact(eeName_t):
+                contact_forces = invdyn.getContactForce(dic_contacts[eeName_t].name, sol)
+                forces[i * 3 : i * 3 + 3] = contact_forces
+        tau_forces = Jlinvel.T @ forces
+        tau_m = (tau_tot - tau_forces)[6:]
+
+        tau_tsid =  invdyn.getActuatorForces(sol)
+        diff = tau_m - tau_tsid
+        """
+        print("_______________")
+        print("tau m    : ", tau_m)
+        print("tau tsid : ", tau_tsid)
+        print("diff : ", diff)
+        """
+        if not np.isclose(diff, np.zeros(diff.shape), atol=1e-12).all():
+            print("_______________")
+            print("Torque tsid and cmputation do not match !! at t = ", t)
+            print("diff : ", diff)
+
+
 
     def storeData(first_iter_for_phase = False):
         appendJointsValues(first_iter_for_phase)
@@ -308,6 +340,7 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
             appendEffectorsTraj(first_iter_for_phase)
         if cfg.IK_store_contact_forces:
             appendContactForcesTrajs(first_iter_for_phase)
+        compare_torques()
 
 
     def printIntermediate():
