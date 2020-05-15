@@ -294,24 +294,28 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
                 phase.contactNormalForce(eeName).append(contact_normal_force.reshape(1), t)
 
     def compare_torques():
-        tau_tot = pin.rnea(pinRobot.model, pinRobot.data, q, v, dv)
+        q_comp = phase.q_t(t)
+        dq_comp = phase.dq_t(t)
+        ddq_comp = phase.ddq_t(t)
+        pinRobot.forwardKinematics(q_comp, dq_comp, ddq_comp)
+        tau_tot = pin.rnea(pinRobot.model, pinRobot.data, q_comp, dq_comp, ddq_comp)
 
         contacts_names = ['LF_ADAPTER_TO_FOOT', 'LH_ADAPTER_TO_FOOT', 'RF_ADAPTER_TO_FOOT', 'RH_ADAPTER_TO_FOOT']
         # compute/stack contact jacobians
         Jlinvel = np.zeros((12, robot.nv))
         forces = np.zeros(12)
         for i, eeName_t in enumerate(contacts_names):
-            frame_id = robot.model().getFrameId(eeName_t)
+            frame_id = pinRobot.model.getFrameId(eeName_t)
             #Jlinvel[3 * i:3 * (i + 1), :] = pinRobot.computeFrameJacobian(q, frame_id)[:3, :]  # jac in local coord
-            oTl = pinRobot.framePlacement(q, frame_id, update_kinematics=False)
-            Jlinvel[3 * i:3 * (i + 1), :] = oTl.rotation @ pinRobot.computeFrameJacobian(q, frame_id)[:3,:]  # jac in world coor
+            oTl = pinRobot.framePlacement(q_comp, frame_id, update_kinematics=False)
+            Jlinvel[3 * i:3 * (i + 1), :] = oTl.rotation @ pinRobot.computeFrameJacobian(q_comp, frame_id)[:3,:]  # jac in world coor
             if phase.isEffectorInContact(eeName_t):
-                contact_forces = invdyn.getContactForce(dic_contacts[eeName_t].name, sol)
+                contact_forces = phase.contactForce(eeName_t)(t)
                 forces[i * 3 : i * 3 + 3] = contact_forces
         tau_forces = Jlinvel.T @ forces
         tau_m = (tau_tot - tau_forces)[6:]
 
-        tau_tsid =  invdyn.getActuatorForces(sol)
+        tau_tsid =  phase.tau_t(t)
         diff = tau_m - tau_tsid
         """
         print("_______________")
@@ -321,9 +325,18 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
         """
         if not np.isclose(diff, np.zeros(diff.shape), atol=1e-12).all():
             print("_______________")
-            print("Torque tsid and cmputation do not match !! at t = ", t)
+            print("Torque tsid and computation do not match !! at t = ", t)
             print("diff : ", diff)
-
+        """
+        if 2.4999 <= t <= 2.501:
+            print("______________________")
+            print("t = ", t)
+            print("q = ", repr(q_comp))
+            print("dq = ", repr(dq_comp))
+            print("ddq = ", repr(ddq_comp))
+            print("tau_tsid = ", repr(tau_tsid))
+            print("forces = ", repr(forces))
+        """
 
 
     def storeData(first_iter_for_phase = False):
@@ -743,4 +756,54 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
     logger.warning("Whole body motion generated in : %f s.", time_end)
     logger.info("\nFinal COM Position  %s", robot.com(invdyn.data()))
     logger.info("Desired COM Position %s", cs.contactPhases[-1].c_final)
+
+    dt = 1e-3  # discretization timespan
+    contact_frames = ['LF_ADAPTER_TO_FOOT', 'LH_ADAPTER_TO_FOOT', 'RF_ADAPTER_TO_FOOT', 'RH_ADAPTER_TO_FOOT']
+    print ("### Test comparison torques")
+    for phase in cs.contactPhases:
+        t = phase.timeInitial
+        while t <= phase.timeFinal:
+
+            q = phase.q_t(t)
+            dq = phase.dq_t(t)
+            ddq = phase.ddq_t(t)
+            pinRobot.forwardKinematics(q, dq, ddq)
+            pinRobot.framesForwardKinematics(q)
+            pinRobot.computeJointJacobians(q)
+            pinRobot.updateGeometryPlacements(q)
+            tau_tot = pin.rnea(pinRobot.model, pinRobot.data, q, dq, ddq)
+
+            Jlinvel = np.zeros((12, pinRobot.nv))
+            forces = np.zeros(12)
+            for i, eeName in enumerate(contact_frames):
+                frame_id = pinRobot.model.getFrameId(eeName)
+                # Jlinvel[3 * i:3 * (i + 1), :] = pinRobot.computeFrameJacobian(q, frame_id)[:3, :]  # jac in local coord
+                oTl = pinRobot.framePlacement(q, frame_id, update_kinematics=False)
+                Jlinvel[3 * i:3 * (i + 1), :] = oTl.rotation @ pinRobot.computeFrameJacobian(q, frame_id)[:3,
+                                                               :]  # jac in world coor
+                if phase.isEffectorInContact(eeName):
+                    forces[i * 3: i * 3 + 3] = phase.contactForce(eeName)(t)
+            tau_forces = Jlinvel.T @ forces
+
+            tau_m = (tau_tot - tau_forces)[6:]
+
+            tau_tsid = phase.tau_t(t)
+
+            diff = tau_m - tau_tsid
+            if not np.isclose(diff, np.zeros(diff.shape), atol=1e-8).all():
+                print("_______________")
+                print("Torque tsid and cmputation do not match !! at t = ", t)
+                print("diff : ", diff)
+            """
+            if 2.4999 <= t <= 2.501:
+                print("______________________")
+                print("t = ", t)
+                print("q1 = ", repr(q))
+                print("dq1 = ", repr(dq))
+                print("ddq1 = ", repr(ddq))
+                print("tau_tsid1 = ", repr(tau_tsid))
+                print("forces1 = ",repr( forces))
+            """
+            t += dt
+
     return cs
