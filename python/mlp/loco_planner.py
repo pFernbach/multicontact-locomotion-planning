@@ -108,6 +108,8 @@ class LocoPlanner:
         if self.cs_ref and self.cs_ref.haveEffectorsTrajectories(1e-2):
             print("Try to copy from previous iteration.")
             self.cs_ref = copyEffectorTrajectories(self.cs_ref, self.cs_com)
+        else:
+            self.cs_ref = None
         if self.cs_ref is None:
             generate_effector_trajectories, EffectorInputs, EffectorOutputs = self.cfg.get_effector_initguess_method()
             if not EffectorInputs.checkAndFillRequirements(self.cs_com, self.cfg, self.fullBody):
