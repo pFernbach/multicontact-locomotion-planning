@@ -8,7 +8,7 @@ except ImportError:
 MASS = 30.47  # cannot retrieve it from urdf because the file is not parsed here ...
 
 ## weight and gains used by TSID
-IK_dt = 0.0025  # 400Hz
+IK_dt = 0.001 # 400Hz
 fMin = 1.0  # minimum normal force
 fMax = 200.  # maximum normal force
 w_com = 1.0  # weight of center of mass task

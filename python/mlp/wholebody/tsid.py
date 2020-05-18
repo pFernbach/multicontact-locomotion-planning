@@ -790,11 +790,11 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
             tau_tsid = phase.tau_t(t)
 
             diff = tau_m - tau_tsid
+            """
             if not np.isclose(diff, np.zeros(diff.shape), atol=1e-8).all():
                 print("_______________")
                 print("Torque tsid and cmputation do not match !! at t = ", t)
                 print("diff : ", diff)
-            """
             if 2.4999 <= t <= 2.501:
                 print("______________________")
                 print("t = ", t)
