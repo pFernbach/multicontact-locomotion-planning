@@ -25,7 +25,6 @@ logger.setLevel(logging.WARNING) #DEBUG, INFO or WARNING
 
 multicontact_api.switchToNumpyArray()
 
-
 class CentroidalInputsMomentumopt(Requirements):
     timings = True
     consistentContacts = True

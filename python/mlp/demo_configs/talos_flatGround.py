@@ -3,15 +3,17 @@ from .common_talos import *
 SCRIPT_PATH = "demos"
 ENV_NAME = "multicontact/ground"
 
-DURATION_SS = 1.6
-DURATION_DS = 0.5
+DURATION_SS = 1.2
+DURATION_DS = 0.3
 
 EFF_T_PREDEF = 0.2
 EFF_T_DELAY = 0.05
 FEET_MAX_VEL = 1.
 FEET_MAX_ANG_VEL = 1.5
 p_max = 0.07
-COM_SHIFT_Z = -0.05
+COM_SHIFT_Z = -0.03
+COM_VIAPOINT_SHIFT_Z = -0.01
+DURATION_CONNECT_GOAL = 0.
 
 USE_PLANNING_ROOT_ORIENTATION = True
 GUIDE_STEP_SIZE = 0.5
@@ -59,4 +61,4 @@ IK_REFERENCE_CONFIG = np.array(
         0.
     ])
 """
-IK_REFERENCE_CONFIG = np.array(Robot.referenceConfig)
+#IK_REFERENCE_CONFIG = np.array(Robot.referenceConfig)

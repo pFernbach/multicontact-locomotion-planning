@@ -4,7 +4,7 @@ planner_variables:
   display_motion: false
 
   floor_height: 0.0 # offset between the contact position and the 'floor' surface used to constraint the height
-  min_rel_height: 0.85 # minimum allowed distance from the robot CoM to the floor
+  min_rel_height: 0.75 # minimum allowed distance from the robot CoM to the floor
 
   heuristic: TimeOptimization  # Types: TrustRegion, SoftConstraint, TimeOptimization #
   n_act_eefs: 2 # number of effector used for contact, will be overwrited with value from the Contact sequence
@@ -26,7 +26,7 @@ planner_variables:
   friction_cone: LinearCone  # Types: LinearCone, SocCone #
   torque_range: [-1000.0, 1000.0]
   # Constraint on the distance between the CoM and the active contact :
-  max_eef_lengths: [0.93,  0.93,  0.9,  0.9]
+  max_eef_lengths: [0.91,  0.91,  0.9,  0.9]
   # transform used for each effector to compute the maximal distance
   eff_offset_rf: [ 0.00,  0.00,  0.00]
   eff_offset_lf: [ 0.00,  0.00,  0.00]
