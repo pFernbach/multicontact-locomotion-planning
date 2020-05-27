@@ -100,6 +100,7 @@ class Config:
         self.COM_SHIFT_Z = 0.0
         self.TIME_SHIFT_COM = 0.0
         self.USE_WP_COST = True  # use wp from the contact sequence in the cost function of the centroidal solver
+        self.COM_VIAPOINT_SHIFT_Z = 0.
         self.QUASISTATIC_ROBUSTNESS = 0. # value (in m) to offset to the CoM position toward the 'inside' on both feet
 
         ## Settings for end effector :

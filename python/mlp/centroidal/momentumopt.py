@@ -128,7 +128,7 @@ def setFinalCOM(planner_setting, cs):
     planner_setting.set(mopt.PlannerVectorParam_CenterOfMassMotion,com_motion)
 
 
-def addCOMviapoints(planner_setting, cs, viewer=None, display_wp = False):
+def addCOMviapoints(planner_setting, cs, COM_VIAPOINT_SHIFT_Z, viewer=None, display_wp = False):
     """
     Add CoM viapoint to the momentumopt problem. Computed for each double support phases from the planned configuration
     :param planner_setting:
@@ -145,6 +145,7 @@ def addCOMviapoints(planner_setting, cs, viewer=None, display_wp = False):
         phase_next = cs.contactPhases[pid + 1]
         if (phase_previous.numContacts() < phase.numContacts())  and (phase_next.numContacts() < phase.numContacts()):
             com = phase.c_init
+            com[2] += COM_VIAPOINT_SHIFT_Z
             com_viapoints += [np.array([phase.timeInitial, com[0], com[1], com[2]])]
             if viewer and display_wp:
                 display.displaySphere(viewer, com.tolist())
@@ -333,7 +334,7 @@ def generate_centroidal_momentumopt(cfg, cs, cs_initGuess=None, fullBody=None, v
     setFinalCOM(planner_setting, cs)
 
     if cfg.USE_WP_COST:
-        addCOMviapoints(planner_setting, cs, viewer, cfg.DISPLAY_WP_COST)
+        addCOMviapoints(planner_setting, cs, cfg.COM_VIAPOINT_SHIFT_Z, viewer, cfg.DISPLAY_WP_COST)
 
     ini_state = initStateFromPhase(cs.contactPhases[0], cfg.TIME_SHIFT_COM, cfg.COM_SHIFT_Z, dict_ee_to_timeopt)
     if first_iter:
