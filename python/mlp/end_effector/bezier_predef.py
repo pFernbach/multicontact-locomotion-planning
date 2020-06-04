@@ -153,15 +153,15 @@ def generatePredefMiddle(bezier_takeoff, bezier_landing, t_min,t_max):
 
 
 def generatePredefBeziers(cfg, time_interval, placement_init, placement_end):
-    t_total = time_interval[1] - time_interval[0] - 2 * cfg.EFF_T_DELAY
+    t_total = time_interval[1] - time_interval[0] - cfg.EFF_T_DELAY_BEGIN - cfg.EFF_T_DELAY_END
     logger.info("Generate Bezier Traj :")
     logger.info("placement Init = %s", placement_init)
     logger.info("placement End  = %s", placement_end)
     logger.info("time interval  = %s", time_interval)
     # generate two curves for the takeoff/landing :
-    t_takeoff_min = time_interval[0] + cfg.EFF_T_DELAY
+    t_takeoff_min = time_interval[0] + cfg.EFF_T_DELAY_BEGIN
     t_takeoff_max = t_takeoff_min + cfg.EFF_T_PREDEF
-    t_landing_max = time_interval[1] - cfg.EFF_T_DELAY
+    t_landing_max = time_interval[1] - cfg.EFF_T_DELAY_END
     t_landing_min = t_landing_max - cfg.EFF_T_PREDEF
     bezier_takeoff = buildPredefinedInitTraj(cfg, placement_init, t_total,t_takeoff_min,t_takeoff_max)
     bezier_landing = buildPredefinedFinalTraj(cfg, placement_end, t_total,t_landing_min,t_landing_max)
@@ -171,14 +171,14 @@ def generatePredefBeziers(cfg, time_interval, placement_init, placement_end):
     curves = piecewise_SE3()
     # create polybezier with concatenation of the 3 (or 5) curves :
     # create constant curve at the beginning and end for the delay :
-    if cfg.EFF_T_DELAY > 0:
+    if cfg.EFF_T_DELAY_BEGIN > 0:
         bezier_init_zero = bezier(bezier_takeoff(bezier_takeoff.min()).reshape([-1,1]), time_interval[0], t_takeoff_min)
         # Create SE3 curves with translation and duration defined from the bezier and constant orientation:
         curves.append(SE3Curve(bezier_init_zero,placement_init.rotation, placement_init.rotation))
     curves.append(SE3Curve(bezier_takeoff, placement_init.rotation, placement_init.rotation))
     curves.append(SE3Curve(bezier_middle, placement_init.rotation, placement_end.rotation))
     curves.append(SE3Curve(bezier_landing, placement_end.rotation, placement_end.rotation))
-    if cfg.EFF_T_DELAY > 0:
+    if cfg.EFF_T_DELAY_END > 0:
         bezier_end_zero = bezier(bezier_landing(bezier_landing.max()).reshape([-1,1]), t_landing_max,time_interval[1])
         # Create SE3 curves with translation and duration defined from the bezier and constant orientation:
         curves.append(SE3Curve(bezier_end_zero,placement_end.rotation,placement_end.rotation))
