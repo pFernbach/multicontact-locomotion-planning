@@ -16,7 +16,7 @@ planner_variables:
   com_displacement: [0., 0., 0.] # will be overwrited with values from the contact sequence
   num_com_viapoints: 0
   com_viapoints:
-  max_time_iterations: 1000
+  max_time_iterations: 10000
   max_time_residual_tolerance: 1e-3
   min_time_residual_improvement: 1e-5
 
