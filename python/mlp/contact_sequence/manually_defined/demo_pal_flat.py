@@ -15,13 +15,15 @@ gui = v.client.gui
 sceneName = v.sceneName
 cs = ContactSequence(0)
 
-SS_FORWARD = 1.6
-DS_FORWARD = 0.5
+
+SS_FORWARD = 1.4
+DS_FORWARD = 0.3
 SS_DIAGONAL = 1.6
-DS_DIAGONAL = 1.
+DS_DIAGONAL = 0.8
+
 DURATION_FINAL = 2.
 FORWARD_STEP_SIZE = 0.2
-DIAGONAL_STEP_SIZE = 0.05 # displacement in each direction, not the norm !
+DIAGONAL_STEP_SIZE = 0.1 # displacement in each direction, not the norm !
 
 FEET_SEPARATION = 0.01
 total_x_dist = 0.
