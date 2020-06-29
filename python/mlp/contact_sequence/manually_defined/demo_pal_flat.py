@@ -23,6 +23,7 @@ DURATION_FINAL = 2.
 FORWARD_STEP_SIZE = 0.2
 DIAGONAL_STEP_SIZE = 0.05 # displacement in each direction, not the norm !
 
+FEET_SEPARATION = 0.01
 total_x_dist = 0.
 total_y_dist = 0.
 
@@ -78,7 +79,7 @@ addPhaseFromConfig(fb, cs, q_ref, [fb.rLegId, fb.lLegId])
 cs.contactPhases[0].timeInitial=0.
 
 # first forward part (5 steps):
-walk(fb, cs, FORWARD_STEP_SIZE * 4, FORWARD_STEP_SIZE, [fb.rLegId, fb.lLegId], [0., 0.], DS_FORWARD, SS_FORWARD)
+walk(fb, cs, FORWARD_STEP_SIZE * 4, FORWARD_STEP_SIZE, [fb.rLegId, fb.lLegId], [-FEET_SEPARATION, FEET_SEPARATION], DS_FORWARD, SS_FORWARD)
 total_x_dist += FORWARD_STEP_SIZE * 4
 cs.resize(cs.size() - 2)
 # second part: 4 steps diagonal for each feet:
@@ -104,11 +105,25 @@ total_x_dist += FORWARD_STEP_SIZE * 4
 # second part: 4 steps diagonal for each feet:
 transform_diagonal = SE3.Identity()
 transform_diagonal.translation = array([DIAGONAL_STEP_SIZE, DIAGONAL_STEP_SIZE, 0])
-for i in range(5):
+for i in range(4):
     cs.moveEffectorOf(fb.lfoot, transform_diagonal, DS_DIAGONAL, SS_DIAGONAL)
     cs.moveEffectorOf(fb.rfoot, transform_diagonal, DS_DIAGONAL, SS_DIAGONAL)
     total_y_dist += DIAGONAL_STEP_SIZE
     total_x_dist += DIAGONAL_STEP_SIZE
+
+# last step have to go back to the reference configuration, so we remove the feet separation offset:
+transform_diagonal_R = transform_diagonal.copy()
+transform_diagonal_L = transform_diagonal.copy()
+translation_R = transform_diagonal_R.translation
+translation_L = transform_diagonal_L.translation
+translation_L[1] -= FEET_SEPARATION
+translation_R[1] += FEET_SEPARATION
+transform_diagonal_R.translation = translation_R
+transform_diagonal_L.translation = translation_L
+cs.moveEffectorOf(fb.lfoot, transform_diagonal_L, DS_DIAGONAL, SS_DIAGONAL)
+cs.moveEffectorOf(fb.rfoot, transform_diagonal_R, DS_DIAGONAL, SS_DIAGONAL)
+total_y_dist += DIAGONAL_STEP_SIZE
+total_x_dist += DIAGONAL_STEP_SIZE
 
 q_end = fb.referenceConfig[::] + [0] * 6
 q_end[0] += total_x_dist
