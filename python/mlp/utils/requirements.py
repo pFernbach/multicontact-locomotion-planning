@@ -186,8 +186,8 @@ class Requirements():
         return True
 
     @classmethod
-    def requireEffectorTrajectories(cls, cs, c_type):
-        if not cs.haveEffectorsTrajectories(1e-2, c_type == "_6_DOF"):
+    def requireEffectorTrajectories(cls, cs):
+        if not cs.haveEffectorsTrajectories(1e-2):
             print("- Contact sequence do not have consistent effector trajectories.")
             return False
         return True
@@ -239,7 +239,7 @@ class Requirements():
             print("- contact forces trajectories for each effector in contact")
 
     @classmethod
-    def assertRequirements(cls, cs, use_effector_rotation = False):
+    def assertRequirements(cls, cs):
         #print("# Assert requirements : ")
         if cls.timings:
             assert cs.haveTimings(), "Contact sequence do not have consistent timings."
@@ -274,8 +274,7 @@ class Requirements():
         if cls.torqueTrajectories:
             assert cs.haveTorquesTrajectories(), "Contact sequence do not have consistent torques trajectories"
         if cls.effectorTrajectories:
-            assert cs.haveEffectorsTrajectories(1e-2, use_effector_rotation), \
-                "Contact sequence do not have consistent effector trajectories."
+            assert cs.haveEffectorsTrajectories(1e-2), "Contact sequence do not have consistent effector trajectories."
         if cls.contactForcesTrajectories:
             assert cs.haveContactForcesTrajectories(), "Contact sequence do not have consistent contact forces trajectories."
         #print("# Assert requirements done.")
@@ -295,8 +294,7 @@ class Requirements():
         if cfg.IK_store_centroidal:
             assert cs.haveCentroidalTrajectories (), "Contact sequence do not have consistent centroidal trajectories."
         if cfg.IK_store_effector:
-            assert cs.haveEffectorsTrajectories(1e-2, cfg.Robot.cType == "_6_DOF"), \
-                "Contact sequence do not have consistent effector trajectories."
+            assert cs.haveEffectorsTrajectories(1e-2), "Contact sequence do not have consistent effector trajectories."
         if cfg.IK_store_contact_forces:
             assert cs.haveContactForcesTrajectories(), "Contact sequence do not have consistent contact forces trajectories."
         if cfg.IK_store_zmp:
@@ -363,7 +361,7 @@ class Requirements():
             if not cls.requireTorqueTrajectories(cs):
                 return False
         if cls.effectorTrajectories:
-            if not cls.requireEffectorTrajectories(cs, cfg.Robot.cType):
+            if not cls.requireEffectorTrajectories(cs):
                 return False
         if cls.contactForcesTrajectories:
             if not cls.requireContactForcesTrajectories(cs):
