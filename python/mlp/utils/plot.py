@@ -1,7 +1,9 @@
 import numpy as np
 import os
 import pinocchio as pin
-from mlp.utils.util import discretizeCurve, discretizeSE3CurveTranslation, discretizeDerivateCurve
+from pinocchio import Quaternion
+from mlp.utils.util import discretizeCurve, discretizeSE3CurveTranslation, discretizeDerivateCurve, \
+    discretizeSE3CurveQuaternion, yawFromQuaternion
 import matplotlib
 matplotlib.use("Qt4agg")
 import matplotlib.pyplot as plt
@@ -24,7 +26,25 @@ def addVerticalLineContactSwitch(cs, plt, linestyle="-.", color='k'):
     for phase in cs.contactPhases:
         plt.axvline(phase.timeFinal, linestyle=linestyle, color=color)
 
-
+def plotEffectorRotationWithReference(cs_ref, cs, dt):
+    for eeName in cs.getAllEffectorsInContact():
+        traj = cs.concatenateEffectorTrajectories(eeName)
+        if traj.num_curves() > 0:
+            rot_quat, timeline = discretizeSE3CurveQuaternion(traj, dt)
+            traj_ref = cs_ref.concatenateEffectorTrajectories(eeName)
+            rot_quat_ref = discretizeSE3CurveQuaternion(traj_ref, dt)[0]
+            yaw_points = [yawFromQuaternion(Quaternion(rot_quat[:,i].reshape(4,-1))) for i in range(timeline.size)]
+            yaw_ref_points = [yawFromQuaternion(Quaternion(rot_quat_ref[:,i].reshape(4,-1))) for i in range(timeline.size)]
+            fig = plt.figure("Orientation for effector " + eeName + " (dashed = reference)")
+            ax = fig.gca()
+            fig.suptitle("Orientation for effector " + eeName + " (dashed = reference)", fontsize=20)
+            ax.plot(timeline.T, yaw_points)
+            ax.plot(timeline.T, yaw_ref_points, linestyle="dashed")
+            ax.set_xlabel('time (s)')
+            ax.set_ylabel('Yaw rotation')
+            addVerticalLineContactSwitch(cs, ax)
+            ax.grid(False)
+        plt.show(block=False)
 
 def plotEffectorTrajectoryWithReference(cs_ref, cs, dt):
     labels = [
@@ -498,6 +518,7 @@ def plotALLFromWB(cs_ref_iters, cs_iters ,cfg):
     if cs.haveEffectorsTrajectories(1e-1):
         plotEffectorTrajectoryWithReference(cs_ref, cs, dt)
         plotEffectorError(cs_ref, cs, dt)
+        plotEffectorRotationWithReference(cs_ref, cs, dt)
     else:
         plotEffectorTrajectory(cs, dt, "Reference")
 

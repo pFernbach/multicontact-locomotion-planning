@@ -3,7 +3,7 @@ from numpy import cross
 from numpy.linalg import norm
 import pinocchio
 from pinocchio import SE3, Quaternion, Motion
-from pinocchio.utils import rpyToMatrix, rotate
+from pinocchio.utils import rpyToMatrix, rotate, matrixToRpy
 from curves import polynomial, SE3Curve, SO3Linear
 import math
 from hpp.corbaserver.rbprm.rbprmstate import State, StateHelper
@@ -541,3 +541,6 @@ def buildRectangularContactPoints(size, transform):
     contact_Point[1, :] = [-lyn, lyp, -lyn, lyp]
     contact_Point[2, :] = [lz] * 4
     return contact_Point
+
+def yawFromQuaternion(quat):
+    return matrixToRpy(quat.matrix())[2]
