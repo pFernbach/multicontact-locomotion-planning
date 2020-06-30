@@ -29,6 +29,20 @@ def effectorCanRetry():
 class Empty:
     None
 
+def get_id_middle(cfg):
+    """
+    Determine the expected index of the 'middle' curves from the list of trajectory
+    The middle curve is defined by the one where most of the motion is done, ie. not the predefined takeoff/landing phases
+    neither the constant position phases
+    :param cfg:
+    :return:
+    """
+    index = 0
+    if cfg.EFF_T_PREDEF > 0:
+        index += 1
+    if cfg.EFF_T_DELAY_BEGIN > 0:
+        index += 1
+    return index
 
 def computeConstantsWithDDJerk(ddjerk, t):
     a = (1. / 6.) * ddjerk * t * t * t
@@ -187,7 +201,7 @@ def generatePredefBeziers(cfg, time_interval, placement_init, placement_end):
 
 def generateSmoothBezierTrajWithPredef(cfg, time_interval, placement_init, placement_end):
     predef_curves = generatePredefBeziers(cfg, time_interval, placement_init, placement_end)
-    id_middle = int(math.floor(predef_curves.num_curves() / 2.))
+    id_middle = get_id_middle(cfg)
     bezier_takeoff = predef_curves.curve_at_index(id_middle-1).translation_curve()
     bezier_landing = predef_curves.curve_at_index(id_middle+1).translation_curve()
     # update mid curve to minimize velocity along the curve:
