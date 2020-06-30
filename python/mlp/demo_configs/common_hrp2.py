@@ -49,7 +49,8 @@ IK_eff_size[Robot.lfoot] = [0.5, 0.8]
 
 ## Settings for end effectors :
 EFF_T_PREDEF = 0.3
-EFF_T_DELAY = 0.05
+EFF_T_DELAY_BEGIN = 0.05  # duration at the beginning and the end of the phase where the effector don't move
+EFF_T_DELAY_END = 0.05
 FEET_MAX_VEL = 0.5
 FEET_MAX_ANG_VEL = 1.5
 p_max = 0.12

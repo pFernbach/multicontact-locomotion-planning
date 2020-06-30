@@ -50,7 +50,8 @@ DURATION_QS = 0.1
 DURATION_CONNECT_GOAL = 0.
 
 ## Settings for end effectors :
-EFF_T_DELAY = 0.
+EFF_T_DELAY_BEGIN = 0. # duration at the beginning and the end of the phase where the effector don't move
+EFF_T_DELAY_END = 0.
 FEET_MAX_VEL = 0.7
 FEET_MAX_ANG_VEL = 1.5
 p_max = 0.2

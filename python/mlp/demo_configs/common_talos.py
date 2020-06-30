@@ -58,7 +58,8 @@ PLOT_CIRCLE_RADIUS = 0.05 # radius of the circle used to display the contacts
 
 ## Settings for end effectors :
 EFF_T_PREDEF = 0.2  # duration during which the motion of the end effector is forced to be orthogonal to the contact surface, at the beginning and the end of the phase
-EFF_T_DELAY = 0.05  # duration at the beginning and the end of the phase where the effector don't move
+EFF_T_DELAY_BEGIN = 0.05  # duration at the beginning and the end of the phase where the effector don't move
+EFF_T_DELAY_END = 0.05
 FEET_MAX_VEL = 0.5  # maximal linear velocity of the effector, if the current duration of the phase lead to a greater velocity than this setting, the duration of the phase is increased
 FEET_MAX_ANG_VEL = 1.5  # maximal angular velocity of the effectors
 p_max = 0.1  #setting used to compute the default height of the effector trajectory. end_effector/bezier_predef.py : computePosOffset()
