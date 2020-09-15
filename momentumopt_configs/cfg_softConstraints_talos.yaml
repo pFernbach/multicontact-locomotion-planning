@@ -26,7 +26,7 @@ planner_variables:
   friction_cone: LinearCone  # Types: LinearCone, SocCone #
   torque_range: [-1000.0, 1000.0]
   # Constraint on the distance between the CoM and the active contact :
-  max_eef_lengths: [0.87,  0.87,  0.9,  0.9]
+  max_eef_lengths: [0.9,  0.9,  0.9,  0.9]
   # transform used for each effector to compute the maximal distance
   eff_offset_rf: [ 0.00,  0.00,  0.00]
   eff_offset_lf: [ 0.00,  0.00,  0.00]
