@@ -57,12 +57,14 @@ PLOT_CIRCLE_RADIUS = 0.05 # radius of the circle used to display the contacts
 #IK_eff_size={Robot.rfoot:[0.1 , 0.06], Robot.lfoot:[0.1 , 0.06],Robot.rhand:[0.1, 0.1],Robot.lhand:[0.1, 0.1]}
 
 ## Settings for end effectors :
-EFF_T_PREDEF = 0.2  # duration during which the motion of the end effector is forced to be orthogonal to the contact surface, at the beginning and the end of the phase
+EFF_T_PREDEF_TAKEOFF = 0.2  # duration during which the motion of the end effector is forced to be orthogonal to the contact surface, at the beginning and the end of the phase
+EFF_T_PREDEF_LANDING = 0.2
 EFF_T_DELAY_BEGIN = 0.05  # duration at the beginning and the end of the phase where the effector don't move
 EFF_T_DELAY_END = 0.05
 FEET_MAX_VEL = 0.5  # maximal linear velocity of the effector, if the current duration of the phase lead to a greater velocity than this setting, the duration of the phase is increased
 FEET_MAX_ANG_VEL = 1.5  # maximal angular velocity of the effectors
-p_max = 0.1  #setting used to compute the default height of the effector trajectory. end_effector/bezier_predef.py : computePosOffset()
+p_max_takeoff = 0.1  #setting used to compute the default height of the effector trajectory. end_effector/bezier_predef.py : computePosOffset()
+p_max_landing = 0.1  #setting used to compute the default height of the effector trajectory. end_effector/bezier_predef.py : computePosOffset()
 
 import numpy as np
 gain_vector = np.array(  # gain vector for postural task

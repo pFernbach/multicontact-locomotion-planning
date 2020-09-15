@@ -660,8 +660,8 @@ def generate_wholebody_tsid(cfg, cs_ref, fullBody=None, viewer=None):
                         # save the first q_t trajectory computed, for limb-rrt
                         first_q_t = phase.q_t
                     logger.warning("Phase %d not valid at t = %f", pid, t_invalid)
-                    if t_invalid <= (phase.timeInitial + cfg.EFF_T_PREDEF) \
-                            or t_invalid >= (phase.timeFinal - cfg.EFF_T_PREDEF):
+                    if t_invalid <= (phase.timeInitial + cfg.EFF_T_PREDEF_TAKEOFF) \
+                            or t_invalid >= (phase.timeFinal - cfg.EFF_T_PREDEF_LANDING):
                         logger.error("Motion is invalid during predefined phases, cannot change this.")
                         return stopHere()
                     if effectorCanRetry():

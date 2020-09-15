@@ -217,10 +217,14 @@ def computePhasesTimings(cs, cfg):
         if pid < cs.size() - 1:
             dist_feet = computeEffectorTranslationBetweenStates(cs, pid)
             if dist_feet > 0.:
-                duration_feet_trans = (2. * cfg.EFF_T_DELAY + 2. * cfg.EFF_T_PREDEF) + dist_feet / cfg.FEET_MAX_VEL
+                duration_feet_trans = (cfg.EFF_T_DELAY_BEGIN + cfg.EFF_T_DELAY_END +
+                                       cfg.EFF_T_PREDEF_TAKEOFF + cfg.EFF_T_PREDEF_LANDING) + \
+                                      dist_feet / cfg.FEET_MAX_VEL
             rot_feet = computeEffectorRotationBetweenStates(cs, pid)
             if rot_feet > 0.:
-                duration_feet_rot = (2. * cfg.EFF_T_DELAY + 2. * cfg.EFF_T_PREDEF) + rot_feet / cfg.FEET_MAX_ANG_VEL
+                duration_feet_rot = (cfg.EFF_T_DELAY_BEGIN + cfg.EFF_T_DELAY_END +
+                                     cfg.EFF_T_PREDEF_TAKEOFF + cfg.EFF_T_PREDEF_LANDING) + \
+                                    rot_feet / cfg.FEET_MAX_ANG_VEL
             duration_feet = max(duration_feet_trans, duration_feet_rot)
             # Make it a multiple of solver_dt :
             if duration_feet > 0.:

@@ -38,7 +38,7 @@ def get_id_middle(cfg):
     :return:
     """
     index = 0
-    if cfg.EFF_T_PREDEF > 0:
+    if cfg.EFF_T_PREDEF_TAKEOFF > 0:
         index += 1
     if cfg.EFF_T_DELAY_BEGIN > 0:
         index += 1
@@ -63,13 +63,18 @@ def computePosOffset(t_predef, t_total, p_max):
     return p, 0., 0.
 
 
-def computePredefConstants(cfg, t):
+def computePredefConstantsTakeoff(cfg, t):
     #return computeConstantsWithDDJerk(250.,)
-    return computePosOffset(cfg.EFF_T_PREDEF, t, cfg.p_max)
+    return computePosOffset(cfg.EFF_T_PREDEF_TAKEOFF, t, cfg.p_max_takeoff)
+
+def computePredefConstantsLanding(cfg, t):
+    #return computeConstantsWithDDJerk(250.,)
+    return computePosOffset(cfg.EFF_T_PREDEF_LANDING, t, cfg.p_max_landing)
+
 
 
 def buildPredefinedInitTraj(cfg, placement, t_total,t_min,t_max):
-    p_off, v_off, a_off = computePredefConstants(cfg, t_total)
+    p_off, v_off, a_off = computePredefConstantsTakeoff(cfg, t_total)
     normal = placement.rotation @ np.array([0, 0, 1])
     logger.debug("normal used for takeoff : %s",normal.T)
     logger.debug("offset used : %s", p_off)
@@ -101,7 +106,7 @@ def buildPredefinedInitTraj(cfg, placement, t_total,t_min,t_max):
 
 
 def buildPredefinedFinalTraj(cfg, placement, t_total,t_min,t_max):
-    p_off, v_off, a_off = computePredefConstants(cfg, t_total)
+    p_off, v_off, a_off = computePredefConstantsLanding(cfg, t_total)
     normal = placement.rotation @ np.array([0, 0, 1])
     logger.debug("normal used for landing : %s", normal.T)
     logger.debug("offset used : %s", p_off)
@@ -174,12 +179,12 @@ def generatePredefBeziers(cfg, time_interval, placement_init, placement_end):
     logger.info("time interval  = %s", time_interval)
     # generate two curves for the takeoff/landing :
     t_takeoff_min = time_interval[0] + cfg.EFF_T_DELAY_BEGIN
-    t_takeoff_max = t_takeoff_min + cfg.EFF_T_PREDEF
+    t_takeoff_max = t_takeoff_min + cfg.EFF_T_PREDEF_TAKEOFF
     t_landing_max = time_interval[1] - cfg.EFF_T_DELAY_END
-    t_landing_min = t_landing_max - cfg.EFF_T_PREDEF
+    t_landing_min = t_landing_max - cfg.EFF_T_PREDEF_LANDING
     bezier_takeoff = buildPredefinedInitTraj(cfg, placement_init, t_total,t_takeoff_min,t_takeoff_max)
     bezier_landing = buildPredefinedFinalTraj(cfg, placement_end, t_total,t_landing_min,t_landing_max)
-    t_middle = (t_total - (2. * cfg.EFF_T_PREDEF))
+    t_middle = (t_total - (cfg.EFF_T_PREDEF_LANDING + cfg.EFF_T_PREDEF_TAKEOFF))
     assert t_middle >= 0.1 and "Duration of swing phase too short for effector motion. Change the values of predef motion for effector or the duration of the contact phase. "
     bezier_middle = generatePredefMiddle(bezier_takeoff, bezier_landing, t_takeoff_max,t_landing_min)
     curves = piecewise_SE3()
@@ -269,7 +274,7 @@ def generateSmoothBezierTraj(cfg,
     if numTry is not None and numTry > 0:
         raise ValueError(
             "generateSmoothBezierTraj will always produce the same trajectory, cannot be called with numTry > 0 ")
-    if cfg.EFF_T_PREDEF > 0:
+    if cfg.EFF_T_PREDEF_LANDING > 0 or cfg.EFF_T_PREDEF_TAKEOFF > 0:
         return generateSmoothBezierTrajWithPredef(cfg, time_interval, placement_init, placement_end)
     else:
         return generateSmoothBezierTrajWithoutPredef(cfg, time_interval, placement_init, placement_end)
