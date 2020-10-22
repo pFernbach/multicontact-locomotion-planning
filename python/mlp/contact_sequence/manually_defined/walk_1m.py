@@ -64,8 +64,8 @@ q_ref = [       0.0,
                 0.]
 #q_ref = fb.referenceConfig + [0]*6
 addPhaseFromConfig(fb, cs, q_ref, [fb.rLegId, fb.lLegId])
-
-walk(fb, cs, 0.9, 0.3, [fb.rLegId, fb.lLegId], [-0.02, 0.02])
+cs.contactPhases[0].timeInitial=0.
+walk(fb, cs, 0.6, 0.2, [fb.rLegId, fb.lLegId], [-0.01, 0.01])
 
 display_tools.displaySteppingStones(cs, gui, sceneName, fb)
 
