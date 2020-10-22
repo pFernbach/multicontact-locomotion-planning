@@ -96,7 +96,8 @@ class LocoPlanner:
 
         if self.cfg.DISPLAY_COM_TRAJ:
             colors = [self.viewer.color.blue, self.viewer.color.green]
-            display_tools.displayCOMTrajectory(self.cs_com, self.gui, self.viewer.sceneName, self.cfg.DT_DISPLAY, colors)
+            display_tools.displayCOMTrajectory(self.cs_com, self.gui, self.viewer.sceneName, self.cfg.DT_DISPLAY,
+                                               colors, "_ier"+str(iter_dynamic_filter))
         if self.cfg.PLOT_CENTROIDAL:
             plot.plotCOMTraj(self.cs_com, self.cfg.SOLVER_DT, " - iter " + str(iter_dynamic_filter))
             plot.plotAMTraj(self.cs_com, self.cfg.SOLVER_DT, " - iter " + str(iter_dynamic_filter))
