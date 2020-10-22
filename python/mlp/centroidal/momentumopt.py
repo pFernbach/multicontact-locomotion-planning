@@ -203,15 +203,15 @@ def buildKinSequenceFromCS(planner_setting, cs, t_init):
     MASS = planner_setting.get(mopt.PlannerDoubleParam_RobotMass)
     states = kin_sequence.kinematics_states
     # fill centroidal trajectories values :
-    #c_t = cs.concatenateCtrajectories()
-    #dc_t = cs.concatenateDCtrajectories()
+    c_t = cs.concatenateCtrajectories()
+    dc_t = cs.concatenateDCtrajectories()
     L_t = cs.concatenateLtrajectories()
     for id, state in enumerate(states):
         t = t_init + (id+1) * dt
         if id == len(states)-1:
             t = L_t.max()
-        #state.com = c_t(t)
-        #state.lmom = dc_t(t) * MASS
+        state.com = c_t(t)
+        state.lmom = dc_t(t) * MASS
         state.amom = L_t(t)
     logger.info("Build kinematic sequence from CS done.")
     return kin_sequence
