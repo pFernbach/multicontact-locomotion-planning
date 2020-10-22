@@ -21,7 +21,7 @@ planner_variables:
   min_time_residual_improvement: 1e-5
 
   gravity: 9.81
-  robot_mass: 90.27
+  robot_mass: 100.
   friction_coeff: 0.2
   friction_cone: LinearCone  # Types: LinearCone, SocCone #
   torque_range: [-1000.0, 1000.0]

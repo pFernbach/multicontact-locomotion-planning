@@ -6,7 +6,7 @@ planner_variables:
   floor_height: 0.0 # offset between the contact position and the 'floor' surface used to constraint the height
   min_rel_height: 0.75 # minimum allowed distance from the robot CoM to the floor
 
-  heuristic: TrustRegion  # Types: TrustRegion, SoftConstraint, TimeOptimization #
+  heuristic: SoftConstraint  # Types: TrustRegion, SoftConstraint, TimeOptimization #
   n_act_eefs: 2 # number of effector used for contact, will be overwrited with value from the Contact sequence
   time_step: 0.05 # time step used by the solver, will be overwrited by the value defined inside the planner
   time_horizon: 0. # duration of the motion, will be overwrited by the value inside the contact sequence
@@ -21,12 +21,12 @@ planner_variables:
   min_time_residual_improvement: 1e-5
 
   gravity: 9.81
-  robot_mass: 90.27
+  robot_mass: 100.
   friction_coeff: 0.2
   friction_cone: LinearCone  # Types: LinearCone, SocCone #
-  torque_range: [-1000.0, 1000.0]
+  torque_range: [-1300.0, 1300.0]
   # Constraint on the distance between the CoM and the active contact :
-  max_eef_lengths: [0.9,  0.9,  0.9,  0.9]
+  max_eef_lengths: [0.85,  0.85,  0.9,  0.9]
   # transform used for each effector to compute the maximal distance
   eff_offset_rf: [ 0.00,  0.00,  0.00]
   eff_offset_lf: [ 0.00,  0.00,  0.00]
@@ -42,7 +42,7 @@ planner_variables:
   w_trq_leg:       0.000
   w_time_penalty:   100. # weight of the cost to reduce the total duration of the motion
   w_time:           1000.0 # weight of the cost to keep the defined duration of each phases
-  w_com:           [ 10000,  100000,  10000] # weight on the final CoM position
+  w_com:           [ 1000,  10000,  1000] # weight on the final CoM position
   w_amom:          [ 0.500,  0.500,  0.500] # weight for the minimization of the angular momentum
   w_lmom:          [ 0.010,  0.001,  0.001] # weight for the minimization of the linear momentum
   w_amomd:         [ 0.100,  0.400,  0.100] # weight for the minimization of the angular momentum derivative
