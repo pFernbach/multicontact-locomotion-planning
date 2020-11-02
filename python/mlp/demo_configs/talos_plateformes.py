@@ -1,4 +1,4 @@
-TIMEOPT_CONFIG_FILE = "cfg_softConstraints_talos.yaml"
+TIMEOPT_CONFIG_FILE = "cfg_softConstraints_timeopt_talos.yaml"
 from .common_talos import *
 Robot.urdfSuffix += "_safeFeet"
 SCRIPT_PATH = "demos"
@@ -9,7 +9,7 @@ DEMO_NAME = "talos_platformes"
 
 #DURATION_INIT = 3.  # Time to init the motion
 DURATION_SS = 2.
-DURATION_DS = 1.5
+DURATION_DS = 1.
 DURATION_TS = 0.4
 DURATION_CONNECT_GOAL = 0.
 COM_SHIFT_Z = -0.05
